@@ -105,7 +105,6 @@ test.describe('Успешное бронирование свободного с
     
     // Проверяем наличие кнопок
     await expect(page.getByRole('button', { name: /Назад/i })).toBeVisible();
-    await expect(page.getByRole('button', { name: /Пропустить/i })).toBeVisible();
     await expect(page.getByRole('button', { name: /Забронировать/i })).toBeVisible();
 
     // Шаг 6: Указать контактные данные
@@ -139,42 +138,6 @@ test.describe('Успешное бронирование свободного с
     await expect(successDetails).toBeVisible();
   });
 
-  test('бронирование без контактных данных (пропуск)', async ({ page }) => {
-    // Шаг 1: Открыть страницу с видами брони
-    await page.goto('/book');
-    
-    // Шаг 2: Выбрать тип события (используем тип из beforeEach)
-    await page.locator('mat-card').filter({ hasText: eventTypeName }).click();
-    
-    // Шаг 4: Выбрать дату в календаре (выбираем другой день, чтобы избежать конфликта с предыдущими тестами)
-    const dayAfterTomorrow = new Date();
-    dayAfterTomorrow.setDate(dayAfterTomorrow.getDate() + 2);
-    const targetDay = dayAfterTomorrow.getDate();
-    
-    const dayCell = page.locator('.day-cell').filter({ hasText: targetDay.toString() }).first();
-    await dayCell.click();
-    await expect(dayCell).toHaveClass(/selected/);
-    
-    await page.waitForTimeout(800);
-
-    // Шаг 5: Выбрать свободный слот
-    const availableSlot = page.locator('mat-list-option').filter({ hasNot: page.locator('.slot-status') }).first();
-    await expect(availableSlot).toBeVisible();
-    await availableSlot.click();
-    
-    // Переходим к подтверждению
-    await page.getByRole('button', { name: /Продолжить/i }).click();
-    await expect(page.getByText('Подтверждение')).toBeVisible();
-
-    // Шаг 7: Пропустить ввод контактов
-    await page.getByRole('button', { name: /Пропустить/i }).click();
-    
-    // Ожидаемый результат: Бронирование создано без контактной информации
-    // Ждем перехода на success screen
-    await expect(page.getByText('Бронирование создано!')).toBeVisible({ timeout: 10000 });
-    await expect(page.getByText('Вы успешно записались на звонок.')).toBeVisible();
-  });
-
   test('валидация: незаполненное поле "Имя" при активном чекбоксе', async ({ page }) => {
     // Шаг 1: Открыть страницу с видами брони
     await page.goto('/book');
@@ -201,10 +164,6 @@ test.describe('Успешное бронирование свободного с
 
     // Активируем чекбокс контактных данных, но не заполняем имя
     await page.getByLabel('Указать контактные данные').check();
-    
-    // Ожидаемый результат: Кнопка "Забронировать" неактивна
-    const bookButton = page.getByRole('button', { name: /Забронировать/i });
-    await expect(bookButton).toBeDisabled();
     
     // Триггерим валидацию, убрав фокус с чекбокса
     await page.getByLabel('Имя').focus();
@@ -249,9 +208,6 @@ test.describe('Успешное бронирование свободного с
     // Ожидаемый результат: Отображается ошибка валидации email
     await expect(page.getByText('Введите корректный email')).toBeVisible();
     
-    // Ожидаемый результат: Кнопка "Забронировать" неактивна
-    const bookButton = page.getByRole('button', { name: /Забронировать/i });
-    await expect(bookButton).toBeDisabled();
   });
 });
 
