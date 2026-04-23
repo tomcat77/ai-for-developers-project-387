@@ -68,16 +68,15 @@ export class GuestInfoStepComponent implements OnInit {
     });
   }
 
-  skip(): void {
-    this.submitBooking({});
-  }
-
   submit(): void {
-    if (!this.form.valid) {
-      return;
+    const formValue = this.form.value;
+    
+    if (formValue.includeContact) {
+      if (!this.form.valid) {
+        return;
+      }
     }
 
-    const formValue = this.form.value;
     const contactParts: string[] = [];
     
     if (formValue.email) contactParts.push(`Email: ${formValue.email}`);
@@ -87,7 +86,7 @@ export class GuestInfoStepComponent implements OnInit {
     const guestContact = contactParts.length > 0 ? contactParts.join(', ') : undefined;
 
     this.submitBooking({
-      guestName: formValue.name,
+      guestName: formValue.name || undefined,
       guestContact
     });
   }
