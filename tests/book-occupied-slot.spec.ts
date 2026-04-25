@@ -69,7 +69,7 @@ test.describe.serial('Попытка забронировать занятый �
     targetDate.setDate(targetDate.getDate() + 2);
     const targetDay = targetDate.getDate();
     
-    const dayCell = page.locator('.day-cell').filter({ hasText: targetDay.toString() }).first();
+    const dayCell = page.locator('.day-cell:not(.other-month)').filter({ hasText: targetDay.toString() }).first();
     await dayCell.click();
     await expect(dayCell).toHaveClass(/selected/);
     
@@ -119,7 +119,7 @@ test.describe.serial('Попытка забронировать занятый �
     targetDate.setDate(targetDate.getDate() + 3);
     const targetDay = targetDate.getDate();
     
-    const dayCell = page.locator('.day-cell').filter({ hasText: targetDay.toString() }).first();
+    const dayCell = page.locator('.day-cell:not(.other-month)').filter({ hasText: targetDay.toString() }).first();
     await dayCell.click();
     await expect(dayCell).toHaveClass(/selected/);
     
@@ -213,7 +213,7 @@ test.describe.serial('Попытка забронировать занятый �
     targetDate.setDate(targetDate.getDate() + 4);
     const targetDay = targetDate.getDate();
     
-    const dayCell = page.locator('.day-cell').filter({ hasText: targetDay.toString() }).first();
+    const dayCell = page.locator('.day-cell:not(.other-month)').filter({ hasText: targetDay.toString() }).first();
     await dayCell.click();
     await expect(dayCell).toHaveClass(/selected/);
     
@@ -281,7 +281,7 @@ test.describe.serial('Попытка забронировать занятый �
     targetDate.setDate(targetDate.getDate() + 5);
     const targetDay = targetDate.getDate();
     
-    const dayCell = page.locator('.day-cell').filter({ hasText: targetDay.toString() }).first();
+    const dayCell = page.locator('.day-cell:not(.other-month)').filter({ hasText: targetDay.toString() }).first();
     await dayCell.click();
     await expect(dayCell).toHaveClass(/selected/);
     
@@ -377,7 +377,7 @@ async function createBooking(
   targetDate.setDate(targetDate.getDate() + params.daysFromNow);
   const targetDay = targetDate.getDate();
   
-  const dayCell = page.locator('.day-cell').filter({ hasText: targetDay.toString() }).first();
+  const dayCell = page.locator('.day-cell:not(.other-month)').filter({ hasText: targetDay.toString() }).first();
   await dayCell.click();
   await expect(dayCell).toHaveClass(/selected/, { timeout: 5000 });
   
@@ -440,7 +440,7 @@ async function createBookingAtSpecificTime(
   targetDate.setDate(targetDate.getDate() + params.daysFromNow);
   const targetDay = targetDate.getDate();
   
-  const dayCell = page.locator('.day-cell').filter({ hasText: targetDay.toString() }).first();
+  const dayCell = page.locator('.day-cell:not(.other-month)').filter({ hasText: targetDay.toString() }).first();
   await dayCell.click();
   await expect(dayCell).toHaveClass(/selected/, { timeout: 5000 });
   
