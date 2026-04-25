@@ -8,6 +8,8 @@ jobs:
   lhci:
     name: Lighthouse CI
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write    
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -17,17 +19,6 @@ jobs:
 
       - name: Build Docker Compose services
         run: docker compose build
-
-      - name: Start services
-        run: |
-          docker compose up -d
-          # Wait for services to be ready
-          sleep 30
-          # Check if backend is healthy
-          docker compose ps
-          # Give extra time for full startup
-          sleep 30
-
       - name: Use Node.js 20.x
         uses: actions/setup-node@v4
         with:

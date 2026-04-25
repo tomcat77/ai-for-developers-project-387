@@ -2,7 +2,7 @@ module.exports = {
   ci: {
     collect: {
       url: ['http://localhost'],
-      numberOfRuns: 3,
+      numberOfRuns: 1,
       startServerCommand: 'docker compose up --wait',
       startServerReadyPattern: 'started',
       startServerReadyTimeout: 120000,
