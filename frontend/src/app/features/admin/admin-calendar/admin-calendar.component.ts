@@ -188,7 +188,9 @@ export class AdminCalendarComponent implements OnInit {
   private getBookingsForDay(date: Date): Booking[] {
     return this.bookings.filter(booking => {
       const bookingDate = new Date(booking.startTime);
-      return isSameDay(bookingDate, date);
+      const bookingDateUtc = Date.UTC(bookingDate.getUTCFullYear(), bookingDate.getUTCMonth(), bookingDate.getUTCDate());
+      const targetDateUtc = Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate());
+      return bookingDateUtc === targetDateUtc;
     });
   }
 
