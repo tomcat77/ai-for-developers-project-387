@@ -1,4 +1,4 @@
-name: Lighthouse
+name: Lighthouse With OpenCode
 on:
   workflow_dispatch:
   pull_request:
@@ -6,13 +6,15 @@ on:
 
 jobs:
   lhci:
-    name: Lighthouse CI
+    name: Lighthouse CI + OpenCode
     runs-on: ubuntu-latest
     permissions:
       id-token: write    
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -27,19 +29,16 @@ jobs:
       - name: Install Lighthouse CI
         run: npm install -g @lhci/cli@0.15.x
 
-      - name: Run Lighthouse CI
-        run: lhci autorun --config=./lighthouserc.js
+      - name: Run OpenCode Performance Analysis
+        uses: anomalyco/opencode/github@latest
         env:
-          LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
-
-      - name: Upload Lighthouse results
-        if: always()
-        uses: actions/upload-artifact@v4
+          OPENCODE_API_KEY: ${{ secrets.OPENCODE_API_KEY }}
         with:
-          name: lighthouse-results
-          path: '.lighthouseci/'
-          retention-days: 7
-
+          model: opencode/minimax-m2.5
+          prompt: |
+            Run a performance audit for the main pages of the application.
+            If overall performance is poor, create an issue
+            with specific recommendations for improvement.          
       - name: Cleanup Docker Compose
         if: always()
         run: docker compose down --volumes --remove-orphans
