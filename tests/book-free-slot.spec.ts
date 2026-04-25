@@ -64,7 +64,7 @@ test.describe('Успешное бронирование свободного с
     const targetDay = tomorrow.getDate();
     
     // Кликаем на день в календаре
-    const dayCell = page.locator('.day-cell').filter({ hasText: targetDay.toString() }).first();
+    const dayCell = page.locator('.day-cell:not(.other-month)').filter({ hasText: targetDay.toString() }).first();
     await dayCell.click();
     
     // Ожидаемый результат: Выбранная дата отображается активной
@@ -150,7 +150,7 @@ test.describe('Успешное бронирование свободного с
     tomorrow.setDate(tomorrow.getDate() + 1);
     const targetDay = tomorrow.getDate();
     
-    const dayCell = page.locator('.day-cell').filter({ hasText: targetDay.toString() }).first();
+    const dayCell = page.locator('.day-cell:not(.other-month)').filter({ hasText: targetDay.toString() }).first();
     await dayCell.click();
     await page.waitForTimeout(500);
 
@@ -185,7 +185,7 @@ test.describe('Успешное бронирование свободного с
     tomorrow.setDate(tomorrow.getDate() + 1);
     const targetDay = tomorrow.getDate();
     
-    const dayCell = page.locator('.day-cell').filter({ hasText: targetDay.toString() }).first();
+    const dayCell = page.locator('.day-cell:not(.other-month)').filter({ hasText: targetDay.toString() }).first();
     await dayCell.click();
     await page.waitForTimeout(500);
 
