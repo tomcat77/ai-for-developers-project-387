@@ -1,20 +1,54 @@
 name: Lighthouse
-on: [workflow_dispatch]
+on:
+  workflow_dispatch:
+  pull_request:
+    branches: [ main, master ]
+
 jobs:
   lhci:
-    name: Lighthouse
+    name: Lighthouse CI
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - name: Use Node.js 16.x
-        uses: actions/setup-node@v3
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build Docker Compose services
+        run: docker compose build
+
+      - name: Start services
+        run: |
+          docker compose up -d
+          # Wait for services to be ready
+          sleep 30
+          # Check if backend is healthy
+          docker compose ps
+          # Give extra time for full startup
+          sleep 30
+
+      - name: Use Node.js 20.x
+        uses: actions/setup-node@v4
         with:
-          node-version: 16.x
-      - name: npm install, build
-        run: |
-          npm install
-          npm run build
-      - name: run Lighthouse CI
-        run: |
-          npm install -g @lhci/cli@0.15.x
-          lhci autorun
+          node-version: 20.x
+
+      - name: Install Lighthouse CI
+        run: npm install -g @lhci/cli@0.15.x
+
+      - name: Run Lighthouse CI
+        run: lhci autorun --config=./lighthouserc.js
+        env:
+          LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
+
+      - name: Upload Lighthouse results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lighthouse-results
+          path: '.lighthouseci/'
+          retention-days: 7
+
+      - name: Cleanup Docker Compose
+        if: always()
+        run: docker compose down --volumes --remove-orphans
