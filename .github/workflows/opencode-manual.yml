@@ -9,7 +9,7 @@ on:
       model:
         description: "Model to use"
         required: false
-        default: "opencode/minimax-m2.7"
+        default: "opencode/minimax-m2.5"
         type: string
 jobs:
   run-opencode-prompt:
@@ -24,6 +24,12 @@ jobs:
         uses: actions/checkout@v6
         with:
           persist-credentials: false
+      - name: Use Node.js LTS
+        uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+      - name: Install Lighthouse CI
+        run: npm install -g @lhci/cli@0.15.x
       - name: Run OpenCode
         uses: anomalyco/opencode/github@latest
         env:

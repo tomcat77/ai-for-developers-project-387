@@ -21,14 +21,12 @@ jobs:
 
       - name: Build Docker Compose services
         run: docker compose build
-      - name: Use Node.js 20.x
+      - name: Use Node.js LTS
         uses: actions/setup-node@v4
         with:
-          node-version: 20.x
-
+          node-version: lts/*
       - name: Install Lighthouse CI
         run: npm install -g @lhci/cli@0.15.x
-
       - name: Run OpenCode Performance Analysis
         uses: anomalyco/opencode/github@latest
         env:
