@@ -6,7 +6,7 @@ on:
 
 jobs:
   lhci:
-    name: Lighthouse CI + OpenCode
+    name: check-ui-performance
     runs-on: ubuntu-latest
     permissions:
       id-token: write    
@@ -34,7 +34,7 @@ jobs:
         env:
           OPENCODE_API_KEY: ${{ secrets.OPENCODE_API_KEY }}
         with:
-          model: opencode/minimax-m2.5
+          model: opencode/minimax-m2.7
           prompt: |
             Run a performance audit for the main pages of the application.
             If overall performance is poor, create an issue
